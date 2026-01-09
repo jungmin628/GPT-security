@@ -1,0 +1,15 @@
+.env
+.env.*
+*.json
+*.csv
+dataset/
+data/
+code_samples/
+0605/
+codeql/
+codeql-win64/
+db-python/
+0608/
+0710/
+0624/
+0724/rag_gen.py

@@ -1,77 +1,33 @@
-# 🔐 ChatGPT-security  
-**RAG(FAISS + Neo4j) 기반 보안 중심 코드 생성 시스템** <br>
-해당 프로젝트는 제 1저자로, KSC2025 "LLM 코드 생성의 보안 강화와 실행 비용 최적화를 위한 통합 접근 방법 연구" 논문으로 기재되었음.
+# 🔐 ChatGPT-security
+### Security-Focused Code Generation with RAG
 
-## 📌 프로젝트 개요
-본 프로젝트는 대규모 언어 모델(LLM)이 생성하는 코드에서 발생할 수 있는  
-**보안 취약점 문제(CWE)**를 완화하기 위해,  
-**RAG(Retrieval-Augmented Generation)** 구조를 적용한  
-**보안 중심 코드 생성 파이프라인**을 구현한 연구 프로젝트이다.
+A research project combining **FAISS vector search** and **Neo4j graph retrieval** to reduce security vulnerabilities in LLM-generated code.
 
-FAISS 기반 벡터 검색과 Neo4j 그래프 데이터베이스를 결합하여,  
-보안적으로 의미 있는 코드 맥락을 검색하고 이를 기반으로  
-**안전한 코드를 생성하도록 LLM을 유도**한다.
+📄 **Publication:** KSC2025 · **First Author**  
+*LLM 코드 생성의 보안 강화와 실행 비용 최적화를 위한 통합 접근 방법 연구*
 
----
+## Overview
 
-## 🎯 프로젝트 목적
-- LLM 코드 생성 과정에서 발생하는 보안 취약점 문제 분석
-- CWE 기반 취약 코드 / 안전 코드 데이터셋 활용
-- 보안 맥락을 반영한 RAG 구조 설계
-- 정적 분석 도구(Semgrep)와 연동 가능한 코드 생성
-- 생성 코드의 보안성 정량적 평가
+The pipeline retrieves CWE-related context and secure code examples to guide LLMs toward safer code generation. Generated code is evaluated using **Semgrep**.
 
----
+## System Architecture
 
-## 🧠 시스템 전체 흐름
-<img width="531" height="635" alt="image" src="https://github.com/user-attachments/assets/5cdba75a-c0b8-42d0-a6e4-57e31ff95f06" />
+<img width="531" alt="System architecture" src="https://github.com/user-attachments/assets/5cdba75a-c0b8-42d0-a6e4-57e31ff95f06" />
 
-## 🛠 사용 기술
+## Method
 
-### AI / LLM
-- OpenAI GPT 계열 모델
-- (실험) 보안 중심 LLM(SafeCoder) 파인튜닝
+- **Dataset:** 3,127 code samples with prompts and vulnerable/secure code pairs (`LLMVulGen_3127.json`)
+- **Retrieval:** FAISS search results mapped to Neo4j nodes
+- **Generation:** RAG prompts incorporating CWE information and secure coding patterns
+- **Language consistency:** Align generated code with the requested language for static analysis
 
-### 검색 및 저장소
-- **FAISS**: 코드 임베딩 기반 벡터 검색
-- **Neo4j**: 코드–취약점–프롬프트 관계 그래프 DB
+## Tech Stack
 
-### 정적 분석
-- **Semgrep**: CWE 기반 보안 취약점 분석
+Python · OpenAI GPT · FAISS · Neo4j · Semgrep · Jupyter Notebook  
+**Experimental:** SafeCoder fine-tuning
 
-### 개발 환경
-- Python
-- Jupyter Notebook
-- JSON 데이터셋
+## Evaluation
 
----
-
-## 📂 데이터셋 설명
-- **LLMVulGen_3127.json**
-- 총 3,127개의 코드 샘플
-- CWE 기반 취약 코드와 안전 코드 쌍으로 구성
-- 프롬프트, 취약 코드, 안전 코드 포함
-
----
-
-## ⚙️ 주요 구현 내용
-
-### FAISS–Neo4j 연계 구조
-- FAISS 검색 결과 ID와 Neo4j 노드 ID를 1:1로 매핑
-- 벡터 유사도 검색과 코드 구조 맥락을 동시에 활용
-
-### 언어 일관성 보장
-- 프롬프트에서 요청한 언어와
-- LLM이 생성한 코드의 언어를 완전히 일치시킴
-- Semgrep 분석 실패 문제 해결
-
-### 보안 중심 RAG 프롬프트 설계
-- CWE 정보 및 안전 코드 패턴을 포함한 프롬프트 구성
-- 단순 예제 나열이 아닌 맥락 기반 코드 생성
-
----
-
-## 🧪 평가 방식
-- 프롬프트별 코드 생성 시간 측정
-- Semgrep를 이용한 CWE 취약점 검출 여부 분석
-- RAG 적용 전/후 보안성 비교
+- Measure code generation time per prompt.
+- Detect CWE-related vulnerabilities using Semgrep.
+- Compare security findings with and without RAG.
